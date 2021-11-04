@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'login.dart';
 import 'signup.dart';
@@ -14,8 +15,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: AuthScreen(),
-      theme:ThemeData(brightness: Brightness.dark,primaryColor: Colors.purple),
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.onAuthStateChanged,
+        builder: (context, usersnapshot) {
+          if (usersnapshot.hasData) {
+            return HomePage();
+          } else {
+            return AuthScreen();
+          }
+        },
+      ),
+      theme:
+          ThemeData(brightness: Brightness.dark, primaryColor: Colors.purple),
     );
   }
 }

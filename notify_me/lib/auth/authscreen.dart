@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'authform.dart';
 
-class AuthScreen extends StatefulWidget{
+class AuthScreen extends StatefulWidget {
   @override
-  _AuthScreenState createState()=>_AuthScreenState();
+  _AuthScreenState createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen>{
+class _AuthScreenState extends State<AuthScreen> {
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title:Text('Authentication')),
+      appBar: AppBar(
+        title: Text('Authentication'),
+      ),
       body: AuthForm(),
     );
   }
 }
-

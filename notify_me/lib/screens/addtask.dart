@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AddTask extends StatefulWidget {
@@ -6,6 +9,28 @@ class AddTask extends StatefulWidget {
 }
 
 class _AddTaskState extends State<AddTask> {
+  TextEditingController titleController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+
+  addtasktofirebase() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    final FirebaseUser user = await auth.currentUser();
+    String uid = user.uid;
+    var time = DateTime.now();
+    await Firestore.instance
+        .collection('tasks')
+        .document(uid)
+        .collection('mytasks')
+        .document(time.toString())
+        .setData({
+      'title': titleController.text,
+      'description': descriptionController.text,
+      'time': time.toString(),
+      'timestamp': time
+    });
+    Fluttertoast.showToast(msg: 'Data Added');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,6 +43,7 @@ class _AddTaskState extends State<AddTask> {
           children: <Widget>[
             Container(
               child: TextFormField(
+                controller: titleController,
                 decoration: InputDecoration(
                   labelText: 'Enter Title',
                   border: OutlineInputBorder(),
@@ -29,6 +55,7 @@ class _AddTaskState extends State<AddTask> {
             ),
             Container(
               child: TextFormField(
+                controller: descriptionController,
                 decoration: InputDecoration(
                   labelText: 'Enter Desccription',
                   border: OutlineInputBorder(),
@@ -51,7 +78,9 @@ class _AddTaskState extends State<AddTask> {
                     return Theme.of(context).primaryColor;
                   }),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  addtasktofirebase();
+                },
                 child: Text(
                   'Add Task',
                   style: GoogleFonts.roboto(
